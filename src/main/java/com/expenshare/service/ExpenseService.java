@@ -137,8 +137,15 @@ public class ExpenseService {
         for(ShareDto participant:req.getSplit()){
             ExpenseShareEntity expenseShare = expenseShareMapper.toEntity(participant, expense.getId());
             UserEntity user = userRepositoryFacade.getUserById(expenseShare.getUser().getId());
-            ExpenseShareEntity newExpenseShare = expenseShareRepositoryFacade.createExpenseShare(expense, user, expenseShare.getShareAmount());
-            participants.add(newExpenseShare);
+
+            if(user.getId().equals(expense.getUser().getId())){
+                ExpenseShareEntity newExpenseShare = expenseShareRepositoryFacade.createExpenseShare(expense, user, expenseShare.getShareAmount().subtract(expense.getAmount()));
+                participants.add(newExpenseShare);
+            }
+            else{
+                ExpenseShareEntity newExpenseShare = expenseShareRepositoryFacade.createExpenseShare(expense, user, expenseShare.getShareAmount());
+                participants.add(newExpenseShare);
+            }
         }
         return participants;
     }
@@ -146,11 +153,23 @@ public class ExpenseService {
     private List<ExpenseShareEntity> createExpensePercent(ExpenseEntity expense, CreateExpenseRequest req){
         List<ExpenseShareEntity> participants = new ArrayList<>();
         for(ShareDto participant:req.getSplit()){
+
             ExpenseShareEntity expenseShare = expenseShareMapper.toEntity(participant, expense.getId());
-            BigDecimal shareAmount = BigDecimal.valueOf(100.0).divide(expenseShare.getShareAmount().multiply(expense.getAmount()), 10, RoundingMode.HALF_UP);
+
+            BigDecimal shareAmount = expense.getAmount()
+                    .multiply(participant.getAmount())
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
             UserEntity user = userRepositoryFacade.getUserById(expenseShare.getUser().getId());
-            ExpenseShareEntity newExpenseShare = expenseShareRepositoryFacade.createExpenseShare(expense, user, shareAmount);
-            participants.add(newExpenseShare);
+
+            if(user.getId().equals(expense.getUser().getId())){
+                ExpenseShareEntity newExpenseShare = expenseShareRepositoryFacade.createExpenseShare(expense, user, shareAmount.subtract(expense.getAmount()));
+                participants.add(newExpenseShare);
+            }
+            else{
+                ExpenseShareEntity newExpenseShare = expenseShareRepositoryFacade.createExpenseShare(expense, user, shareAmount);
+                participants.add(newExpenseShare);
+            }
         }
 
         return participants;

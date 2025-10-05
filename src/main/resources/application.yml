@@ -3,6 +3,11 @@ micronaut:
     name: expen-share
   server:
     port: 8080
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:swagger-ui
+        mapping: /swagger/**
 
 datasources:
   default:

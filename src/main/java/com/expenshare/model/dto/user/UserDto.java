@@ -1,9 +1,14 @@
 package com.expenshare.model.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 
+import javax.swing.text.View;
 import java.time.Instant;
 
 @Introspected
@@ -15,15 +20,16 @@ public class UserDto {
 
     private String name;
 
-
+    @Email
     private String email;
 
-
+    @Pattern(regexp = "^\\+[1-9]\\d{1,14}$")
     private String mobileNumber;
 
     @Nullable
     private AddressDto address;
 
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Instant createdAt;
 
     public UserDto(String name, String email) {

@@ -3,6 +3,9 @@ package com.expenshare.model.dto.user;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 
 @Introspected
@@ -10,10 +13,16 @@ import io.micronaut.serde.annotation.Serdeable;
 public class CreateUserRequest {
 
 
+    @NotBlank
     private String name;
+    @NotBlank
+    @Email
     private String email;
+
     @Nullable
+    @Pattern(regexp = "^\\+[1-9]\\d{1,14}$")
     private String mobileNumber;
+
     @Nullable
     private AddressDto address;
 

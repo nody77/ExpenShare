@@ -27,6 +27,7 @@ public class CreateExpenseRequest {
     @NotBlank
     private String description;
 
+    @NotNull
     private ExpenseSplitType splitType;
     private List<ShareDto> split;
 

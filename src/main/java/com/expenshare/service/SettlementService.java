@@ -10,9 +10,6 @@ import com.expenshare.repository.facade.SettlementRepositoryFacade;
 import jakarta.inject.Singleton;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 
 @Singleton
 public class SettlementService {
@@ -27,7 +24,6 @@ public class SettlementService {
         this.settlementMapper = settlementMapper;
     }
 
-
     public SettlementDto createSettlement(CreateSettlementRequest req){
         if(req.isEnforceOwedLimit()){
             validateOwnedAmountSettlement(req);
@@ -37,32 +33,23 @@ public class SettlementService {
         return settlementMapper.toDto(newSettlement);
     }
 
-    public Map<String, String> settlementConfirm(long settlementId){
-        Map<String,String> response = new LinkedHashMap<>();
+    public SettlementDto settlementConfirm(long settlementId){
+
         SettlementEntity settlement = settlementRepositoryFacade.getSettlementById(settlementId);
-
-        response.put("settlementId", settlement.getId().toString());
-
         SettlementEntity settlementConfirmed = settlementRepositoryFacade.createConfirmed(settlement);
-
-        response.put("status", settlementConfirmed.getStatus().toString());
-        response.put("confirmedAt", settlementConfirmed.getConfirmedAt().toString());
-
         SettlementDto confirmedSettlementDto = settlementMapper.toDto(settlementConfirmed);
         kafkaProducer.sendSettlementConfirmed(confirmedSettlementDto);
 
-        return response;
+        return new SettlementDto(settlement.getId(), confirmedSettlementDto.getStatus(), confirmedSettlementDto.getConfirmedAt());
     }
 
-    public Map<String, String> settlementCancel(long settlementId){
-        Map<String,String> response = new LinkedHashMap<>();
+    public SettlementDto settlementCancel(long settlementId){
 
         SettlementEntity settlement = settlementRepositoryFacade.getSettlementById(settlementId);
-
-        response.put("settlementId", settlement.getId().toString());
         SettlementEntity settlementCancel = settlementRepositoryFacade.createCancel(settlement);
-
-        response.put("status", settlementCancel.getStatus().toString());
+        SettlementDto response = new SettlementDto();
+        response.setSettlementId(settlementCancel.getId());
+        response.setStatus(settlementCancel.getStatus());
 
         return response;
     }

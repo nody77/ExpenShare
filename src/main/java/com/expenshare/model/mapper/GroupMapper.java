@@ -22,6 +22,10 @@ public interface GroupMapper {
     @Mapping(target = "name", source = "e.name")
     @Mapping(target = "createdAt", source = "e.createdAt")
     @Mapping(target = "members", source = "memberIds")
+    @Mapping(target = "items", ignore = true)
+    @Mapping(target = "page", ignore = true)
+    @Mapping(target = "size", ignore = true)
+    @Mapping(target = "total", ignore = true)
     GroupDto toDto(GroupEntity e, List<Long> memberIds);
 
 

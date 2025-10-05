@@ -31,6 +31,7 @@ public interface ExpenseMapper {
     @Mapping(target = "description" , source = "e.description")
     @Mapping(target = "split" , source = "shares")
     @Mapping(target = "createdAt" , source = "e.createdAt")
+    @Mapping(target = "calculatedAt", ignore = true)
     ExpenseDto toDto(ExpenseEntity e, List<ShareDto> shares);
 
     default GroupEntity mapGroup(long groupId) {

@@ -1,6 +1,7 @@
 package com.expenshare.model.dto.expense;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Introspected
 @Serdeable
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ExpenseDto {
     private long expenseId;
     private long groupId;
@@ -24,6 +26,9 @@ public class ExpenseDto {
     private String description;
     private List<ShareDto> split;
     private Instant createdAt;
+    private Instant calculatedAt;
+
+    public ExpenseDto(){}
 
     public ExpenseDto(long expenseId, long groupId, long paidBy, BigDecimal amount, String description) {
         this.expenseId = expenseId;
@@ -33,6 +38,11 @@ public class ExpenseDto {
         this.description = description;
     }
 
+    public ExpenseDto(long groupId, List<ShareDto> split, Instant calculatedAt) {
+        this.groupId = groupId;
+        this.split = split;
+        this.calculatedAt = calculatedAt;
+    }
 
     public long getExpenseId() {
         return expenseId;
@@ -89,4 +99,14 @@ public class ExpenseDto {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
+
+    public Instant getCalculatedAt() {
+        return calculatedAt;
+    }
+
+    public void setCalculatedAt(Instant calculatedAt) {
+        this.calculatedAt = calculatedAt;
+    }
+
+
 }

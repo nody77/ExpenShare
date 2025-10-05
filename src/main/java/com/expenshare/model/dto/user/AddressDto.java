@@ -2,13 +2,13 @@ package com.expenshare.model.dto.user;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 @Introspected
 @Serdeable
 public class AddressDto {
 
-    @NotNull
+    @NotBlank
     private String line1;
 
     private String line2;

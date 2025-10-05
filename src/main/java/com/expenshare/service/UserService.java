@@ -1,6 +1,7 @@
 package com.expenshare.service;
 
 import com.expenshare.event.KafkaProducer;
+import com.expenshare.exception.ValidationException;
 import com.expenshare.model.dto.user.CreateUserRequest;
 import com.expenshare.model.dto.user.UserDto;
 import com.expenshare.model.entity.UserEntity;
@@ -25,17 +26,21 @@ public class UserService {
     }
 
     public UserDto createUser(CreateUserRequest user){
+        try {
+            UserEntity userEntity = userMapper.toEntity(user);
 
-        UserEntity userEntity = userMapper.toEntity(user);
+            UserEntity userEntityCreated = userRepositoryFacade.createUser(userEntity.getName(),
+                    userEntity.getEmail(), userEntity.getMobileNumber(), userEntity.getAddressLine1(), userEntity.getAddressLine2(),
+                    userEntity.getAddressCity(), userEntity.getAddressState(), userEntity.getAddressPostal(), userEntity.getAddressCountry());
 
-        UserEntity userEntityCreated = userRepositoryFacade.createUser(userEntity.getName(),
-                userEntity.getEmail(), userEntity.getMobileNumber(), userEntity.getAddressLine1(), userEntity.getAddressLine2(),
-                userEntity.getAddressCity(), userEntity.getAddressState(), userEntity.getAddressPostal(), userEntity.getAddressCountry());
-
-        UserDto newUser = userMapper.toDto(userEntityCreated);
-        kafkaProducer.sendUserCreated(newUser);
-        kafkaProducer.sendUserWelcomeNotification(newUser);
-        return newUser;
+            UserDto newUser = userMapper.toDto(userEntityCreated);
+            kafkaProducer.sendUserCreated(newUser);
+            kafkaProducer.sendUserWelcomeNotification(newUser);
+            return newUser;
+        }
+        catch (jakarta.validation.ConstraintViolationException e){
+            throw new ValidationException("Invalid email or mobileNumber");
+        }
     }
 
     public UserDto getUserByID(long id){

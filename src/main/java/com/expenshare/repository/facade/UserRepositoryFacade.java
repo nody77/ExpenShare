@@ -41,7 +41,7 @@ public class UserRepositoryFacade implements UserRepository {
             if (isConstraintViolationException(e)) {
                 ConstraintViolationException cve = (ConstraintViolationException) e;
                 String constraintName = cve.getConstraintName();
-                if ("PUBLIC.UK_USER_EMAIL_INDEX_4".equals(constraintName)) {
+                if ("PUBLIC.CONSTRAINT_INDEX_4".equals(constraintName)) {
                     throw new ConflictException("Email already exists");
                 }
             }

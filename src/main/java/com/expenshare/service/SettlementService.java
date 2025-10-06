@@ -4,12 +4,16 @@ import com.expenshare.event.KafkaProducer;
 import com.expenshare.exception.ValidationException;
 import com.expenshare.model.dto.settlement.CreateSettlementRequest;
 import com.expenshare.model.dto.settlement.SettlementDto;
+import com.expenshare.model.entity.GroupEntity;
+import com.expenshare.model.entity.GroupMemberEntity;
 import com.expenshare.model.entity.SettlementEntity;
 import com.expenshare.model.mapper.SettlementMapper;
+import com.expenshare.repository.facade.GroupRepositoryFacade;
 import com.expenshare.repository.facade.SettlementRepositoryFacade;
 import jakarta.inject.Singleton;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Singleton
 public class SettlementService {

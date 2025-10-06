@@ -51,7 +51,6 @@ public class ExpenseService {
                 throw new ValidationException("Split array should not be empty");
         }
 
-
         //Validate that if split type is EXACT or PERCENT that the split list is sum is correct
         if(req.getSplitType().equals(ExpenseSplitType.EXACT)){
             validateParticipantSumExact(req);

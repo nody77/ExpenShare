@@ -38,6 +38,7 @@ public class CreateSettlementRequest {
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
         this.amount = amount;
+        this.enforceOwedLimit = true;
     }
 
     public long getGroupId() {

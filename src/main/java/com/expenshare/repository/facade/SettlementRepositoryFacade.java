@@ -36,11 +36,14 @@ public class SettlementRepositoryFacade implements SettlementRepository {
             throw new ConflictException("From User can not be the same to User To");
         }
 
-        String query = "SELECT u FROM SettlementEntity u WHERE u.group =: group AND u.fromUser =: fromUser AND u.toUser =: toUser";
-        SettlementEntity settlement = entityManager.createQuery(query, SettlementEntity.class).setParameter("group", group).setParameter("fromUser", fromUser)
-                .setParameter("toUser", toUser).getSingleResult();
+        if (group == null || fromUser == null || toUser == null) {
+            throw new NotFoundException("Group or users not found");
+        }
 
-        return settlement.getAmount();
+        String query = "SELECT COALESCE(SUM(es.shareAmount), 0) FROM ExpenseShareEntity es WHERE es.expense.group = :group AND es.expense.user = :toUser AND es.user = :fromUser ";
+
+        return entityManager.createQuery(query, BigDecimal.class).setParameter("group", group)
+                .setParameter("toUser", toUser).setParameter("fromUser", fromUser).getSingleResult();
     }
 
     @Override

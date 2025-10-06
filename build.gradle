@@ -45,6 +45,10 @@ dependencies {
     implementation("io.micronaut.openapi:micronaut-openapi")
     compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
 
+    // FlyWay Dependencies
+    implementation("io.micronaut.flyway:micronaut-flyway")
+    implementation("io.micronaut:micronaut-management")
+
 }
 
 
